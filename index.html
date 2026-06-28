@@ -1,12 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Space Builder</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌌 Space Builder</title>
+
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<h1>🌌 Space Builder</h1>
+<!-- Animated Stars -->
+<div id="stars"></div>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="loginPage" class="page">
+
+    <h1>🌌 SPACE BUILDER</h1>
+
+    <p>Create your cosmic civilization.</p>
+
+    <input
+        id="username"
+        placeholder="Username">
+
+    <input
+        id="password"
+        type="password"
+        placeholder="Password">
+
+    <label class="uploadLabel">
+        📷 Profile Picture (Optional)
+    </label>
+
+    <input
+        type="file"
+        id="profileImage"
+        accept="image/*">
+
+    <button id="startButton">
+        🚀 START GAME
+    </button>
+
+</div>
+
+<!-- ================= MAIN MENU ================= -->
+
+<div id="menuPage" class="page hidden">
+
+<div class="topBar">
+
+<div id="coinDisplay">
+⭐ Coins:
+<span id="coins">100</span>
+</div>
+
+<button id="saveButton">
+💾 Save
+</button>
+
+</div>
+
+<h1>🚀 SPACE HUB</h1>
+
+<div id="profileBox">
+
+<img
+id="playerImage"
+src=""
+alt="Profile">
+
+<h2 id="playerName">
+Commander
+</h2>
+
+<p id="playerRank">
+🌱 Beginner
+</p>
+
+</div>
+
+<div class="menuButtons">
+
+<button id="createBtn">
+🌍 Create
+</button>
+
+<button id="profileBtn">
+👤 Profile
+</button>
+
+<button id="rankBtn">
+🏆 Ranks
+</button>
+
+<button id="tutorialBtn">
+📖 Tutorial
+</button>
+
+<button id="savedBtn">
+💾 Play Saved Worlds
+</button>
+
+<button id="multiBtn">
+👥 Multiplayer
+</button>
+
+</div>
+
+<div id="menuOutput">
+
+Welcome to Space Builder!
+
+</div>
+
+</div>
+
+<!-- ================= CREATE PAGE ================= -->
+
+<div id="createPage" class="page hidden">
+
+<h1>🌌 Create</h1>
+
+<p>Select what you want to build.</p>
+
+<button id="planetButton">
+🌍 Planet
+</button>
+
+<button id="universeButton">
+🌌 Universe
+<br>
+(Locked)
+</button>
+
+<button id="multiverseButton">
+🌠 Multiverse
+<br>
+(Locked)
+</button>
+
+<br><br>
+
+<button id="backButton">
+⬅ Back
+</button>
+
+</div>
+
+<!-- ================= PLANET PAGE ================= -->
+
+<div id="planetPage" class="page hidden">
+
+<h1>🌍 Planet Builder</h1>
+
+<p>This page will be built next.</p>
+
+<button id="planetBack">
+⬅ Return
+</button>
+
+</div>
 
 <script src="script.js"></script>
 
