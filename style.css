@@ -1,75 +1,38 @@
-/* ===========================
-   SPACE BUILDER STYLE
-=========================== */
-
 *{
+
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:Arial,sans-serif;
+
 }
 
 body{
+
 background:#000;
 color:white;
 overflow:hidden;
-}
-
-/* ===========================
-STARS
-=========================== */
-
-#stars{
-position:fixed;
-left:0;
-top:0;
-width:100%;
-height:100%;
-z-index:-1;
-background:
-radial-gradient(circle,#ffffff 1px,transparent 1px);
-background-size:60px 60px;
-animation:moveStars 120s linear infinite;
-}
-
-@keyframes moveStars{
-
-0%{
-background-position:0 0;
-}
-
-100%{
-background-position:0 4000px;
-}
 
 }
-
-/* ===========================
-PAGES
-=========================== */
 
 .page{
+
+display:none;
 
 width:100vw;
 height:100vh;
 
-display:flex;
-
+justify-content:center;
+align-items:center;
 flex-direction:column;
 
-justify-content:center;
-
-align-items:center;
-
 }
 
-.hidden{
-display:none;
-}
+.active{
 
-/* ===========================
-LOGIN
-=========================== */
+display:flex;
+
+}
 
 h1{
 
@@ -77,65 +40,47 @@ font-size:55px;
 
 margin-bottom:20px;
 
-text-shadow:
-0 0 20px cyan;
-
-}
-
-p{
-
-margin-bottom:20px;
+text-shadow:0 0 25px cyan;
 
 }
 
 input{
 
-width:300px;
+width:320px;
 
-padding:15px;
+padding:14px;
 
 margin:10px;
 
 border:none;
 
-border-radius:15px;
+border-radius:12px;
 
 font-size:18px;
 
 }
-
-.uploadLabel{
-
-margin-top:10px;
-
-}
-
-/* ===========================
-BUTTONS
-=========================== */
 
 button{
 
-padding:15px 25px;
+padding:14px 24px;
 
-margin:10px;
+margin:8px;
 
 border:none;
 
-border-radius:15px;
-
-font-size:18px;
+border-radius:12px;
 
 cursor:pointer;
 
-background:#00c6ff;
+background:#00bfff;
 
 color:white;
 
-transition:.25s;
+font-size:18px;
 
-box-shadow:
-0 0 20px #00c6ff;
+box-shadow:0 0 15px cyan;
+
+transition:.25s;
 
 }
 
@@ -147,69 +92,73 @@ background:#00ffff;
 
 }
 
-/* ===========================
-TOP BAR
-=========================== */
+#stars{
 
-.topBar{
+position:fixed;
+
+left:0;
+top:0;
+
+width:100%;
+height:100%;
+
+overflow:hidden;
+
+z-index:-1;
+
+}
+
+.star{
 
 position:absolute;
 
-top:20px;
+background:white;
 
-left:20px;
+border-radius:50%;
 
-right:20px;
+animation:twinkle 2s infinite alternate;
+
+}
+
+@keyframes twinkle{
+
+from{
+
+opacity:.2;
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1.8);
+
+}
+
+}
+
+#topBar{
+
+position:absolute;
+
+top:10px;
+
+left:0;
+
+width:100%;
 
 display:flex;
 
 justify-content:space-between;
 
-align-items:center;
-
-}
-
-#coinDisplay{
+padding:15px;
 
 font-size:22px;
 
 }
 
-/* ===========================
-PROFILE
-=========================== */
-
-#profileBox{
-
-margin:25px;
-
-text-align:center;
-
-}
-
-#playerImage{
-
-width:140px;
-
-height:140px;
-
-border-radius:50%;
-
-border:4px solid cyan;
-
-background:#111;
-
-object-fit:cover;
-
-margin-bottom:15px;
-
-}
-
-/* ===========================
-MENU
-=========================== */
-
-.menuButtons{
+.menu{
 
 display:flex;
 
@@ -217,36 +166,28 @@ flex-wrap:wrap;
 
 justify-content:center;
 
-max-width:900px;
+width:900px;
+
+gap:10px;
 
 }
 
-#menuOutput{
+#output{
 
-margin-top:30px;
-
-padding:20px;
+margin-top:25px;
 
 width:80%;
 
-max-width:700px;
+height:200px;
 
-background:rgba(255,255,255,.08);
+overflow:auto;
+
+padding:20px;
 
 border-radius:20px;
 
-backdrop-filter:blur(8px);
+background:rgba(255,255,255,.08);
 
-font-size:20px;
-
-}
-
-/* ===========================
-CREATE PAGE
-=========================== */
-
-#createPage button{
-
-width:280px;
+backdrop-filter:blur(10px);
 
 }
