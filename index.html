@@ -1,169 +1,510 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>🌌 Space Builder</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+
+background:#000;
+color:white;
+overflow:hidden;
+
+}
+
+.page{
+
+display:none;
+
+width:100vw;
+height:100vh;
+
+justify-content:center;
+align-items:center;
+flex-direction:column;
+
+}
+
+.active{
+
+display:flex;
+
+}
+
+h1{
+
+font-size:55px;
+margin-bottom:20px;
+text-shadow:0 0 25px cyan;
+
+}
+
+h2{
+
+margin-bottom:20px;
+
+}
+
+input{
+
+width:320px;
+
+padding:14px;
+
+margin:10px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:18px;
+
+}
+
+button{
+
+padding:14px 24px;
+
+margin:8px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+background:#00bfff;
+
+color:white;
+
+font-size:18px;
+
+box-shadow:0 0 15px cyan;
+
+transition:.25s;
+
+}
+
+button:hover{
+
+transform:scale(1.08);
+
+background:#00ffff;
+
+}
+
+#stars{
+
+position:fixed;
+
+left:0;
+top:0;
+
+width:100%;
+height:100%;
+
+overflow:hidden;
+
+z-index:-1;
+
+}
+
+.star{
+
+position:absolute;
+
+background:white;
+
+border-radius:50%;
+
+animation:twinkle 2s infinite alternate;
+
+}
+
+@keyframes twinkle{
+
+from{
+
+opacity:.2;
+
+}
+
+to{
+
+opacity:1;
+
+transform:scale(1.8);
+
+}
+
+}
+
+#topBar{
+
+position:absolute;
+
+top:10px;
+
+left:0;
+
+width:100%;
+
+display:flex;
+
+justify-content:space-between;
+
+padding:15px;
+
+}
+
+#coins{
+
+font-size:22px;
+
+color:gold;
+
+font-weight:bold;
+
+}
+
+#rank{
+
+font-size:20px;
+
+color:cyan;
+
+}
+
+.menu{
+
+display:flex;
+
+flex-wrap:wrap;
+
+justify-content:center;
+
+width:900px;
+
+}
+
+#output{
+
+margin-top:25px;
+
+width:80%;
+
+height:180px;
+
+overflow:auto;
+
+padding:20px;
+
+border-radius:20px;
+
+background:rgba(255,255,255,.08);
+
+backdrop-filter:blur(10px);
+
+}
+
+#planet{
+
+width:500px;
+
+height:500px;
+
+border-radius:50%;
+
+background:radial-gradient(circle,#2a7cff,#001a33);
+
+box-shadow:0 0 60px #2a7cff;
+
+position:relative;
+
+overflow:hidden;
+
+cursor:crosshair;
+
+margin-top:20px;
+
+}
+
+.object{
+
+position:absolute;
+
+transform:translate(-50%,-50%);
+
+font-size:22px;
+
+user-select:none;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<!-- Animated Stars -->
 <div id="stars"></div>
 
-<!-- ================= LOGIN ================= -->
+<!-- LOGIN -->
 
-<div id="loginPage" class="page">
+<div id="loginPage" class="page active">
 
-    <h1>🌌 SPACE BUILDER</h1>
+<h1>🌌 SPACE BUILDER</h1>
 
-    <p>Create your cosmic civilization.</p>
+<input
+id="username"
+placeholder="Username">
 
-    <input
-        id="username"
-        placeholder="Username">
+<input
+id="password"
+type="password"
+placeholder="Password">
 
-    <input
-        id="password"
-        type="password"
-        placeholder="Password">
+<input
+type="file"
+id="profilePicture"
+accept="image/*">
 
-    <label class="uploadLabel">
-        📷 Profile Picture (Optional)
-    </label>
+<button onclick="login()">
 
-    <input
-        type="file"
-        id="profileImage"
-        accept="image/*">
+🚀 START GAME
 
-    <button id="startButton">
-        🚀 START GAME
-    </button>
-
-</div>
-
-<!-- ================= MAIN MENU ================= -->
-
-<div id="menuPage" class="page hidden">
-
-<div class="topBar">
-
-<div id="coinDisplay">
-⭐ Coins:
-<span id="coins">100</span>
-</div>
-
-<button id="saveButton">
-💾 Save
 </button>
 
 </div>
 
-<h1>🚀 SPACE HUB</h1>
+<!-- MAIN MENU -->
 
-<div id="profileBox">
+<div id="menuPage" class="page">
 
-<img
-id="playerImage"
-src=""
-alt="Profile">
+<div id="topBar">
 
-<h2 id="playerName">
-Commander
+<div id="coins">
+
+⭐ Coins:
+<span id="coinValue">100</span>
+
+</div>
+
+<div id="rank">
+
+🌱 Beginner
+
+</div>
+
+<button onclick="saveGame()">
+
+💾 Save
+
+</button>
+
+</div>
+
+<h1>
+
+🚀 SPACE HUB
+
+</h1>
+
+<h2 id="welcome">
+
 </h2>
 
-<p id="playerRank">
-🌱 Beginner
-</p>
+<div class="menu">
 
-</div>
+<button onclick="createMenu()">
 
-<div class="menuButtons">
-
-<button id="createBtn">
 🌍 Create
+
 </button>
 
-<button id="profileBtn">
+<button onclick="profileMenu()">
+
 👤 Profile
+
 </button>
 
-<button id="rankBtn">
+<button onclick="rankMenu()">
+
 🏆 Ranks
+
 </button>
 
-<button id="tutorialBtn">
+<button onclick="tutorialMenu()">
+
 📖 Tutorial
+
 </button>
 
-<button id="savedBtn">
-💾 Play Saved Worlds
+<button onclick="savedMenu()">
+
+💾 Saved Worlds
+
 </button>
 
-<button id="multiBtn">
+<button onclick="multiplayerMenu()">
+
 👥 Multiplayer
+
 </button>
 
 </div>
 
-<div id="menuOutput">
+<div id="output">
 
-Welcome to Space Builder!
-
-</div>
+Welcome Commander.
 
 </div>
 
-<!-- ================= CREATE PAGE ================= -->
+</div>
 
-<div id="createPage" class="page hidden">
+<!-- CREATE PAGE -->
 
-<h1>🌌 Create</h1>
+<div id="createPage"
 
-<p>Select what you want to build.</p>
+class="page">
 
-<button id="planetButton">
+<h1>
+
+🌌 Create
+
+</h1>
+
+<button onclick="planetBuilder()">
+
 🌍 Planet
+
 </button>
 
-<button id="universeButton">
-🌌 Universe
-<br>
+<button>
+
+☀ Universe
+
 (Locked)
+
 </button>
 
-<button id="multiverseButton">
-🌠 Multiverse
-<br>
+<button>
+
+♾ Multiverse
+
 (Locked)
+
 </button>
 
-<br><br>
+<button onclick="backMenu()">
 
-<button id="backButton">
 ⬅ Back
+
 </button>
 
 </div>
 
-<!-- ================= PLANET PAGE ================= -->
+<script>
 
-<div id="planetPage" class="page hidden">
+let username="";
+let coins=100;
+let currentRank="Beginner";
 
-<h1>🌍 Planet Builder</h1>
+let profileImage="";
 
-<p>This page will be built next.</p>
+const ranks=[
+"Beginner",
+"Orbital",
+"Universal",
+"Multiversal",
+"Space Explorer"
+];
 
-<button id="planetBack">
-⬅ Return
-</button>
+for(let i=0;i<250;i++){
 
-</div>
+let s=document.createElement("div");
 
-<script src="script.js"></script>
+s.className="star";
 
-</body>
-</html>
+let size=Math.random()*3+1;
+
+s.style.width=size+"px";
+s.style.height=size+"px";
+
+s.style.left=Math.random()*100+"vw";
+
+s.style.top=Math.random()*100+"vh";
+
+s.style.animationDuration=
+(Math.random()*3+2)+"s";
+
+document
+.getElementById("stars")
+.appendChild(s);
+
+}
+
+function login(){
+
+username=
+document
+.getElementById("username")
+.value.trim();
+
+if(username==""){
+
+alert("Enter username");
+
+return;
+
+}
+
+document
+.getElementById("loginPage")
+.classList
+.remove("active");
+
+document
+.getElementById("menuPage")
+.classList
+.add("active");
+
+document
+.getElementById("welcome")
+.innerHTML=
+
+"Welcome Commander <b>"+username+"</b>";
+
+let file=
+
+document
+.getElementById("profilePicture")
+.files[0];
+
+if(file){
+
+let reader=new FileReader();
+
+reader.onload=function(){
+
+profileImage=reader.result;
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+}
