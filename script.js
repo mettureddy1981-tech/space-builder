@@ -1,4 +1,3 @@
-<script>
 // ============================
 // 🌌 SPACE BUILDER CORE SYSTEM
 // ============================
@@ -30,10 +29,11 @@ let quests = [
   "Build 5 objects",
   "Spawn 3 NPCs"
 ];
+
 let completedQuests = [];
 
 // ============================
-// 🧭 PAGE NAVIGATION SYSTEM
+// 🧭 PAGE SYSTEM
 // ============================
 
 function showPage(pageId) {
@@ -48,7 +48,7 @@ function showPage(pageId) {
 }
 
 // ============================
-// 💰 COIN SYSTEM
+// 💰 COINS SYSTEM
 // ============================
 
 function addCoins(amount) {
@@ -111,7 +111,9 @@ function loadWorld(slot) {
   coins = data.coins;
   coinPower = data.coinPower;
   currentRank = data.currentRank;
+
   currentPlanet = data.planet || 0;
+
   npcs = data.npcs || [];
   quests = data.quests || [];
   completedQuests = data.completedQuests || [];
@@ -134,8 +136,8 @@ function spaceTravel() {
     currentPlanet = 0;
   }
 
-  document.getElementById("output").innerText =
-    "🚀 Now on: " + planets[currentPlanet];
+  let out = document.getElementById("output");
+  if (out) out.innerText = "🚀 Now on: " + planets[currentPlanet];
 }
 
 // ============================
@@ -157,10 +159,11 @@ function showNPCs() {
   let html = "<h2>👽 NPC LIST</h2>";
 
   npcs.forEach(n => {
-    html += `${n.name} - ${n.mood}<br>`;
+    html += n.name + " - " + n.mood + "<br>";
   });
 
-  document.getElementById("output").innerHTML = html;
+  let out = document.getElementById("output");
+  if (out) out.innerHTML = html;
 }
 
 // ============================
@@ -174,7 +177,8 @@ function showQuests() {
     html += "• " + q + "<br>";
   });
 
-  document.getElementById("output").innerHTML = html;
+  let out = document.getElementById("output");
+  if (out) out.innerHTML = html;
 }
 
 function completeQuest() {
@@ -189,7 +193,7 @@ function completeQuest() {
 }
 
 // ============================
-// 🌍 PLANET OBJECT SYSTEM
+// 🌍 PLANET DATA
 // ============================
 
 function getPlanetData() {
@@ -203,16 +207,15 @@ function setPlanetData(data) {
 }
 
 // ============================
-// 🔍 ANALYZE DATA SYSTEM
+// 🔍 ANALYZE GAME
 // ============================
 
 function analyzeGame() {
   let report = "===== SPACE BUILDER REPORT =====\n\n";
 
-  // check elements
-  const requiredIds = ["planet", "coinValue", "rankValue", "output"];
+  const required = ["planet", "coinValue", "rankValue", "output"];
 
-  requiredIds.forEach(id => {
+  required.forEach(id => {
     if (document.getElementById(id)) {
       report += "✔ " + id + " found\n";
     } else {
@@ -220,11 +223,10 @@ function analyzeGame() {
     }
   });
 
-  // game stats
   report += "\n--- STATS ---\n";
   report += "Coins: " + coins + "\n";
   report += "Rank: " + currentRank + "\n";
-  report += "Planets: " + planets[currentPlanet] + "\n";
+  report += "Planet: " + planets[currentPlanet] + "\n";
   report += "NPCs: " + npcs.length + "\n";
   report += "World: " + currentWorld + "\n";
 
@@ -252,10 +254,10 @@ setInterval(() => {
 }, 10000);
 
 // ============================
-// 🚀 INIT
+// 🚀 START GAME
 // ============================
 
-updateCoins();
-showPage("menuPage");
-<<script type="text/javascript" charset="utf-8">
-    
+window.onload = function () {
+  updateCoins();
+  showPage("menuPage");
+};
