@@ -1,703 +1,261 @@
+<script>
 // ============================
-// 🌌 SPACE BUILDER
-// MESSAGE 1
+// 🌌 SPACE BUILDER CORE SYSTEM
 // ============================
 
+// ---------- GLOBAL DATA ----------
 let username = "";
-
 let coins = 10;
-
+let coinPower = 1;
 let currentRank = "Beginner";
 
-let profileImage = "";
+let currentPage = "menuPage";
 
-let savedWorlds = [];
-
-let selectedPlanet = null;
-
-// ============================
-// STAR BACKGROUND
-// ============================
-
-for(let i=0;i<250;i++){
-
-let star=document.createElement("div");
-
-star.className="star";
-
-let size=Math.random()*3+1;
-
-star.style.width=size+"px";
-
-star.style.height=size+"px";
-
-star.style.left=Math.random()*100+"vw";
-
-star.style.top=Math.random()*100+"vh";
-
-star.style.animationDuration=
-(Math.random()*3+2)+"s";
-
-document
-.getElementById("stars")
-.appendChild(star);
-
-}
-
-// ============================
-// LOGIN
-// ============================
-
-function login(){
-
-username=
-document
-.getElementById("username")
-.value.trim();
-
-if(username===""){
-
-alert("Enter username");
-
-return;
-
-}
-
-document
-.getElementById("loginPage")
-.classList
-.remove("active");
-
-document
-.getElementById("menuPage")
-.classList
-.add("active");
-
-document
-.getElementById("welcome")
-.innerHTML=
-
-"Welcome Commander <b>"+username+"</b>";
-
-let file=
-
-document
-.getElementById("profilePicture")
-.files[0];
-
-if(file){
-
-let reader=new FileReader();
-
-reader.onload=function(){
-
-profileImage=reader.result;
-
+// ---------- WORLD DATA ----------
+let worldSlots = JSON.parse(localStorage.getItem("worldSlots")) || {
+  world1: null,
+  world2: null,
+  world3: null
 };
 
-reader.readAsDataURL(file);
+let currentWorld = "world1";
 
-}
+// ---------- PLANET DATA ----------
+let planets = ["Earth Base", "Moon Colony", "Mars City"];
+let currentPlanet = 0;
 
-}
+let npcs = [];
+let quests = [
+  "Collect 50 coins",
+  "Build 5 objects",
+  "Spawn 3 NPCs"
+];
+let completedQuests = [];
 
 // ============================
-// MENU PLACEHOLDERS
+// 🧭 PAGE NAVIGATION SYSTEM
 // ============================
 
-function createMenu(){
+function showPage(pageId) {
+  document.querySelectorAll(".page").forEach(p => {
+    p.style.display = "none";
+  });
 
-// Planet Builder arrives in Message 2
+  let page = document.getElementById(pageId);
+  if (page) page.style.display = "block";
 
-}
-
-function profileMenu(){
-
-// Continues in Message 2
-
-}
-
-function rankMenu(){
-
-// Continues in Message 2
-
-}
-
-function tutorialMenu(){
-
-// Continues in Message 2
-
-}
-
-function savedMenu(){
-
-// Continues in Message 2
-
-}
-
-function multiplayerMenu(){
-
-// Continues in Message 2
-
-}
-
-function saveGame(){
-
-// Continues in Message 2
-
-}
-// =============================
-// 🌌 SPACE BUILDER
-// MESSAGE 2
-// PAGE NAVIGATION
-// =============================
-
-function hidePages(){
-
-const pages=document.querySelectorAll(".page");
-
-pages.forEach(page=>{
-
-page.classList.remove("active");
-
-});
-
+  currentPage = pageId;
 }
 
 // ============================
-// MAIN MENU
+// 💰 COIN SYSTEM
 // ============================
 
-function backMenu(){
+function addCoins(amount) {
+  coins += amount * coinPower;
+  updateCoins();
+}
 
-hidePages();
+function updateCoins() {
+  let el = document.getElementById("coinValue");
+  if (el) el.innerText = coins;
 
-document
-.getElementById("menuPage")
-.classList
-.add("active");
-
+  updateRank();
 }
 
 // ============================
-// CREATE MENU
+// 🏆 RANK SYSTEM
 // ============================
 
-function createMenu(){
+function updateRank() {
+  if (coins >= 1000) currentRank = "Galaxy Lord";
+  else if (coins >= 500) currentRank = "Star King";
+  else if (coins >= 200) currentRank = "Explorer";
+  else currentRank = "Beginner";
 
-hidePages();
-
-document
-.getElementById("createPage")
-.classList
-.add("active");
-
+  let el = document.getElementById("rankValue");
+  if (el) el.innerText = currentRank;
 }
 
 // ============================
-// BACK TO CREATE
+// 🌍 WORLD SAVE SYSTEM
 // ============================
 
-function backCreate(){
+function saveWorld() {
+  worldSlots[currentWorld] = {
+    coins,
+    coinPower,
+    currentRank,
+    planet: currentPlanet,
+    npcs,
+    quests,
+    completedQuests,
+    objects: getPlanetData()
+  };
 
-hidePages();
+  localStorage.setItem("worldSlots", JSON.stringify(worldSlots));
 
-document
-.getElementById("createPage")
-.classList
-.add("active");
+  alert("🌍 World Saved: " + currentWorld);
+}
 
+function loadWorld(slot) {
+  let data = worldSlots[slot];
+
+  if (!data) {
+    alert("No world found!");
+    return;
+  }
+
+  currentWorld = slot;
+
+  coins = data.coins;
+  coinPower = data.coinPower;
+  currentRank = data.currentRank;
+  currentPlanet = data.planet || 0;
+  npcs = data.npcs || [];
+  quests = data.quests || [];
+  completedQuests = data.completedQuests || [];
+
+  setPlanetData(data.objects || "");
+
+  updateCoins();
+
+  alert("🌍 Loaded " + slot);
 }
 
 // ============================
-// PROFILE
+// 🚀 PLANET SYSTEM
 // ============================
 
-function profileMenu(){
+function spaceTravel() {
+  currentPlanet++;
 
-hidePages();
+  if (currentPlanet >= planets.length) {
+    currentPlanet = 0;
+  }
 
-document
-.getElementById("profilePage")
-.classList
-.add("active");
-
-let html="";
-
-html+="<h2>Commander</h2><br>";
-
-html+="Username: <b>"+username+"</b><br><br>";
-
-html+="Coins: "+coins+"<br><br>";
-
-html+="Rank: "+currentRank+"<br><br>";
-
-if(profileImage!=""){
-
-html+="<img src='"+profileImage+"' width='150' style='border-radius:50%;border:3px solid cyan;'>";
-
-}else{
-
-html+="No Profile Picture";
-
-}
-
-document
-.getElementById("profileInfo")
-.innerHTML=html;
-
+  document.getElementById("output").innerText =
+    "🚀 Now on: " + planets[currentPlanet];
 }
 
 // ============================
-// SPACE RANK
+// 👽 NPC SYSTEM
 // ============================
 
-function rankMenu(){
+function spawnNPC() {
+  let npc = {
+    name: "Alien " + Math.floor(Math.random() * 10000),
+    mood: "happy"
+  };
 
-hidePages();
+  npcs.push(npc);
 
-document
-.getElementById("rankPage")
-.classList
-.add("active");
+  alert("👽 Spawned: " + npc.name);
+}
 
-document
-.getElementById("rankInfo")
-.innerHTML=
+function showNPCs() {
+  let html = "<h2>👽 NPC LIST</h2>";
 
-`
+  npcs.forEach(n => {
+    html += `${n.name} - ${n.mood}<br>`;
+  });
 
-🌱 Beginner<br><br>
-
-🛰 Orbital<br><br>
-
-🌍 Universal<br><br>
-
-🌌 Multiversal<br><br>
-
-🚀 Space Explorer<br><br>
-
-🌟 Galaxy Creator<br><br>
-
-🌠 Universe Master<br><br>
-
-🪐 Multiverse Architect<br><br>
-
-✨ Cosmic God<br><br>
-
-♾ Infinite Creator
-
-`;
-
+  document.getElementById("output").innerHTML = html;
 }
 
 // ============================
-// TUTORIAL
+// 🎯 QUEST SYSTEM
 // ============================
 
-function tutorialMenu(){
+function showQuests() {
+  let html = "<h2>🎯 QUESTS</h2>";
 
-hidePages();
+  quests.forEach(q => {
+    html += "• " + q + "<br>";
+  });
 
-document
-.getElementById("tutorialPage")
-.classList
-.add("active");
+  document.getElementById("output").innerHTML = html;
+}
 
-document
-.getElementById("tutorialInfo")
-.innerHTML=
+function completeQuest() {
+  if (quests.length === 0) return;
 
-`
+  let q = quests.shift();
+  completedQuests.push(q);
 
-1. Login.<br><br>
+  addCoins(20);
 
-2. Click Create.<br><br>
-
-3. Build your Planet.<br><br>
-
-4. Collect Space Coins.<br><br>
-
-5. Complete Quests.<br><br>
-
-6. Unlock Universe Builder.<br><br>
-
-7. Unlock Multiverse Builder.<br><br>
-
-8. Become Infinite Creator.
-
-`;
-
+  alert("🎯 Completed: " + q);
 }
 
 // ============================
-// SAVED WORLDS
+// 🌍 PLANET OBJECT SYSTEM
 // ============================
 
-function savedMenu(){
+function getPlanetData() {
+  let planet = document.getElementById("planet");
+  return planet ? planet.innerHTML : "";
+}
 
-hidePages();
-
-document
-.getElementById("savedPage")
-.classList
-.add("active");
-
-document
-.getElementById("savedWorldsList")
-.innerHTML=
-
-"No saved worlds yet.";
-
+function setPlanetData(data) {
+  let planet = document.getElementById("planet");
+  if (planet) planet.innerHTML = data;
 }
 
 // ============================
-// MULTIPLAYER
+// 🔍 ANALYZE DATA SYSTEM
 // ============================
 
-function multiplayerMenu(){
+function analyzeGame() {
+  let report = "===== SPACE BUILDER REPORT =====\n\n";
 
-hidePages();
+  // check elements
+  const requiredIds = ["planet", "coinValue", "rankValue", "output"];
 
-document
-.getElementById("multiplayerPage")
-.classList
-.add("active");
+  requiredIds.forEach(id => {
+    if (document.getElementById(id)) {
+      report += "✔ " + id + " found\n";
+    } else {
+      report += "✖ " + id + " missing\n";
+    }
+  });
 
+  // game stats
+  report += "\n--- STATS ---\n";
+  report += "Coins: " + coins + "\n";
+  report += "Rank: " + currentRank + "\n";
+  report += "Planets: " + planets[currentPlanet] + "\n";
+  report += "NPCs: " + npcs.length + "\n";
+  report += "World: " + currentWorld + "\n";
+
+  alert(report);
+  console.log(report);
 }
 
 // ============================
-// SAVE GAME
+// 🔄 AUTO SAVE
 // ============================
 
-function saveGame(){
+setInterval(() => {
+  worldSlots[currentWorld] = {
+    coins,
+    coinPower,
+    currentRank,
+    planet: currentPlanet,
+    npcs,
+    quests,
+    completedQuests,
+    objects: getPlanetData()
+  };
 
-alert("💾 Save System arrives in JavaScript Message 4.");
-
-}
-
-// ============================
-// PLANET BUILDER
-// ============================
-
-function planetBuilder(){
-
-hidePages();
-
-document
-.getElementById("planetPage")
-.classList
-.add("active");
-
-document
-.getElementById("planetCoins")
-.innerHTML=coins;
-
-document
-.getElementById("planetRank")
-.innerHTML=currentRank;
-
-}
-// ============================
-// 🌍 PLANET BUILDER
-// MESSAGE 3
-// ============================
-
-let selectedItem=null;
-
-let deleteModeEnabled=false;
-
-let buildCosts={
-
-tree:2,
-
-water:3,
-
-mountain:4,
-
-fire:2,
-
-house:6,
-
-grass:1,
-
-fish:5
-
-};
-
-let buildStats={
-
-tree:0,
-
-water:0,
-
-mountain:0,
-
-fire:0,
-
-house:0,
-
-grass:0,
-
-fish:0
-
-};
+  localStorage.setItem("worldSlots", JSON.stringify(worldSlots));
+}, 10000);
 
 // ============================
-// SELECT ITEM
+// 🚀 INIT
 // ============================
 
-function selectItem(item){
-
-deleteModeEnabled=false;
-
-selectedItem=item;
-
-document
-.getElementById("selectedItem")
-.innerHTML=
-
-"Selected: <b>"+item+"</b>";
-
-}
-
-// ============================
-// DELETE MODE
-// ============================
-
-function deleteMode(){
-
-selectedItem=null;
-
-deleteModeEnabled=true;
-
-document
-.getElementById("selectedItem")
-.innerHTML=
-
-"🗑 Delete Mode Enabled";
-
-}
-
-// ============================
-// PLANET CLICK
-// ============================
-
-document
-.addEventListener("click",function(e){
-
-let planet=
-
-document
-.getElementById("planet");
-
-if(!planet) return;
-
-if(!planet.contains(e.target)) return;
-
-let rect=
-
-planet.getBoundingClientRect();
-
-let x=e.clientX-rect.left;
-
-let y=e.clientY-rect.top;
-
-// DELETE
-
-if(deleteModeEnabled){
-
-if(
-
-e.target.classList.contains("planetObject")
-
-){
-
-e.target.remove();
-
-}
-
-return;
-
-}
-
-// NOTHING SELECTED
-
-if(selectedItem==null){
-
-return;
-
-}
-
-// CHECK COINS
-
-let cost=
-
-buildCosts[selectedItem];
-
-if(coins<cost){
-
-alert("Not enough Space Coins!");
-
-return;
-
-}
-
-// SPEND COINS
-
-coins-=cost;
-
-document
-.getElementById("coinValue")
-.innerHTML=coins;
-
-document
-.getElementById("planetCoins")
-.innerHTML=coins;
-
-// CREATE OBJECT
-
-let object=
-
-document
-.createElement("div");
-
-object.className="planetObject";
-
-object.style.left=x+"px";
-
-object.style.top=y+"px";
-
-let emoji="";
-
-switch(selectedItem){
-
-case"tree":
-
-emoji="🌳";
-
-buildStats.tree++;
-
-break;
-
-case"water":
-
-emoji="💧";
-
-buildStats.water++;
-
-break;
-
-case"mountain":
-
-emoji="⛰";
-
-buildStats.mountain++;
-
-break;
-
-case"fire":
-
-emoji="🔥";
-
-buildStats.fire++;
-
-break;
-
-case"house":
-
-emoji="🏠";
-
-buildStats.house++;
-
-break;
-
-case"grass":
-
-emoji="🌾";
-
-buildStats.grass++;
-
-break;
-
-case"fish":
-
-emoji="🐟";
-
-buildStats.fish++;
-
-break;
-
-}
-
-object.innerHTML=emoji;
-
-planet.appendChild(object);
-
-updateQuest();
-
-});
-
-// ============================
-// QUEST
-// ============================
-
-let currentQuest={
-
-item:"tree",
-
-goal:10,
-
-reward:25
-
-};
-
-function updateQuest(){
-
-let progress=
-
-buildStats[currentQuest.item];
-
-document
-.getElementById("questProgress")
-.innerHTML=
-
-progress+" / "+currentQuest.goal;
-
-if(progress>=currentQuest.goal){
-
-coins+=currentQuest.reward;
-
-document
-.getElementById("coinValue")
-.innerHTML=coins;
-
-document
-.getElementById("planetCoins")
-.innerHTML=coins;
-
-alert(
-
-"Quest Complete!\n+"+
-
-currentQuest.reward+
-
-" Coins"
-
-);
-
-currentQuest.goal+=5;
-
-document
-.getElementById("questText")
-.innerHTML=
-
-"Build "+
-
-currentQuest.goal+
-
-" Trees";
-
-}
-
-}
+updateCoins();
+showPage("menuPage");
+<<script type="text/javascript" charset="utf-8">
+    
