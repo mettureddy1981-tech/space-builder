@@ -146,11 +146,11 @@ function saveGame(){
 // Continues in Message 2
 
 }
-// ============================
+// =============================
 // 🌌 SPACE BUILDER
 // MESSAGE 2
 // PAGE NAVIGATION
-// ============================
+// =============================
 
 function hidePages(){
 
@@ -385,7 +385,7 @@ function planetBuilder(){
 hidePages();
 
 document
-.getElementById("planetView")
+.getElementById("planetPage")
 .classList
 .add("active");
 
